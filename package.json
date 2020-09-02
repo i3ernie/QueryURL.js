@@ -2,11 +2,22 @@
     "name": "QueryURL.js",
     "version": "0.20.09",
     "license": "MIT",
-
-    "dependencies": {
-
-    },
+    "dependencies": {},
     "devDependencies": {
-
-    }
+        "gulp": "latest",
+        "rollup": "latest",
+        "rollup-plugin-terser": "latest"
+    },
+    "directories": {
+        "example": "examples",
+        "dist": "dist"
+    },
+    "files": [
+        "LICENSE",
+        "README.md",
+        "dist/QueryURL.js",
+        "dist/QueryURL.min.js",
+        "dist/QueryURL.es.js",
+        "package.json"
+    ]
 }
