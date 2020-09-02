@@ -126,7 +126,8 @@ QueryURL.prototype = Object.assign( Object.create( QueryURL.prototype ), {
                     
                 }
             }
-            return this._parse( qry, res ); 
+            if (res) return this._parse( qry, res ); 
+            return res;
         }
 
         if ( this.options.ignore.indexOf( this.options.prefix + qry ) < 0 && params.has( this.options.prefix + qry) ) {          
