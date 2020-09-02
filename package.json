@@ -15,9 +15,7 @@
     "files": [
         "LICENSE",
         "README.md",
-        "dist/QueryURL.js",
-        "dist/QueryURL.min.js",
-        "dist/QueryURL.es.js",
+        "dist/**",
         "package.json"
     ]
 }
