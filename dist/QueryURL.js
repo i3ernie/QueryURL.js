@@ -26,7 +26,38 @@
         }
 
         if ( type === "plainJSON" ) {
-            return str;
+            let ret = str;
+
+            try {
+                let res = {};
+                str.split( ',' ).forEach( function ( el ) { 
+                    let q = el.split( ':' );
+                    
+                    res[ q[0] ] = q[1];
+                    
+                } );
+                ret = res;
+            } catch ( e ) {
+                console.error( "ERROR in Parameter " + str + ": " + type, e );
+            }
+            return ret;
+        }
+
+        if ( type === "list" ) {
+            let ret = str;
+
+            try {
+                let res = [];
+
+                str.split( ',' ).forEach( function ( el ) {     
+                    res.push( el );
+                } );
+                
+                ret = res;
+            } catch ( e ) {
+                console.error( "ERROR in Parameter " + str + ": " + type, e );
+            }
+            return ret;
         }
 
         return str;
@@ -70,7 +101,7 @@
         },
 
         setType : function( param, type ){
-
+            this.options.types[param] = type;
         },
 
         setPrefix : function( pref ){
