@@ -9,18 +9,68 @@ const defaults = {
     } 
 };
 
+const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 const __typeCast = function( str, type ){
 
-    if ( type === "integer") {
+    if ( type === "integer" ) {
         return parseInt( str );
     }
 
-    if ( type === "number") {
-        return parseFloat( str );
+    if ( type === "number" ) {
+        let num = parseFloat( str );
+        return isNaN( num )? null : num;
+    }
+
+    if ( type === "boolean" ) {
+
+        if ( str === "true" || str === "1" )
+        {
+            return true;
+        }
+        if ( str==="false" || str === "0" ){
+            return false;
+        }
+        return null;
     }
 
     if ( type === "plainJSON" ) {
-        return str;
+        let ret = str;
+
+        try {
+            let res = {};
+            str.split( ',' ).forEach( function ( el ) { 
+                let q = el.split( ':' );
+                
+                res[ q[0] ] = q[1];
+                
+            } );
+            ret = res;
+        } catch ( e ) {
+            console.error( "ERROR in Parameter " + str + ": " + type, e );
+        }
+        return ret;
+    }
+
+    if ( type === "list" ) {
+        let ret = str;
+
+        try {
+            let res = [];
+
+            str.split( ',' ).forEach( function ( el ) {     
+                res.push( el );
+            } );
+
+            ret = res;
+        } catch ( e ) {
+            console.error( "ERROR in Parameter " + str + ": " + type, e );
+        }
+        return ret;
+    }
+
+    if ( type === "uuid") { 
+        return uuidV4Regex.test( str )? str : null;
     }
 
     return str;
@@ -64,7 +114,7 @@ QueryURL.prototype = Object.assign( Object.create( QueryURL.prototype ), {
     },
 
     setType : function( param, type ){
-
+        this.options.types[param] = type;
     },
 
     setPrefix : function( pref ){
@@ -97,7 +147,7 @@ QueryURL.prototype = Object.assign( Object.create( QueryURL.prototype ), {
         for ( let i = 0; i < this.options.queries.length; i++ ) {
             qry = this.options.queries[i];
             val = this.getQuery( qry );
-            if ( val ) {
+            if ( val !== null && val !== undefined ) {
                 ret[ qry ] = val;
             }
         }
@@ -133,7 +183,7 @@ QueryURL.prototype = Object.assign( Object.create( QueryURL.prototype ), {
             return this._parse( qry, params.getAll( this.options.prefix + qry ) ); 
         }
         
-        if( this.options.ignore.indexOf( qry ) < 0 && params.has( qry ) ) {             
+        if( this.options.ignore.indexOf( qry ) < 0 && params.has( qry ) ) {   
             return this._parse( qry, params.getAll( qry ) ); 
         }
 
